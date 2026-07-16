@@ -1,0 +1,27 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Customer {
+  id            String   @id @default(cuid())
+  customerNo    String   @unique
+  firstName     String
+  lastName      String
+  mobileNumber  String   @unique
+  nrc           String   @unique
+  email         String?
+  dateOfBirth   DateTime?
+  gender        String?
+  status        String   @default("PENDING_KYC")
+  creditLimit   Decimal  @default(500)
+  availableLimit Decimal @default(500)
+  standing      String   @default("NEW")
+  isVip         Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
