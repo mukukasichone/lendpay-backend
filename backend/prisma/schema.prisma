@@ -7,21 +7,1087 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+///////////////////////////////////////////////////////////
+// ENUMS
+///////////////////////////////////////////////////////////
+
+enum Currency {
+  ZMW
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+  MANAGER
+  CREDIT_MANAGER
+  LOAN_OFFICER
+  COLLECTIONS
+  CASHIER
+  VIEWER
+}
+
+enum CustomerStatus {
+  PENDING_KYC
+  ACTIVE
+  INACTIVE
+  BLOCKED
+}
+
+enum CustomerStanding {
+  NEW
+  GOOD
+  AT_RISK
+  DEFAULTED
+}
+
+enum InterestCalculationMethod {
+  SIMPLE_FIXED
+  REDUCING_BALANCE
+}
+
+enum LoanStatus {
+  PENDING
+  APPROVED
+  DISBURSED
+  ACTIVE
+  COMPLETED
+  DEFAULTED
+  WRITTEN_OFF
+  REJECTED
+  OVERDUE
+}
+
+enum LoanApplicationStatus {
+  DRAFT
+  SUBMITTED
+  UNDER_REVIEW
+  RECOMMENDED
+  APPROVED
+  REJECTED
+  CANCELLED
+  DISBURSED
+}
+
+enum LoanPurpose {
+  PERSONAL
+  BUSINESS
+  AGRICULTURE
+  EDUCATION
+  MEDICAL
+  EMERGENCY
+  SALARY_ADVANCE
+  HOME_IMPROVEMENT
+  CONSUMPTION
+  OTHER
+}
+
+enum ApplicationDecision {
+  PENDING
+  RECOMMEND_APPROVAL
+  RECOMMEND_REJECTION
+  APPROVED
+  REJECTED
+}
+
+enum RepaymentMethod {
+  CASH
+  MOBILE_MONEY
+  BANK_TRANSFER
+}
+
+enum DocumentType {
+  NRC_FRONT
+  NRC_BACK
+  PASSPORT
+  PASSPORT_PHOTO
+  DRIVERS_LICENSE
+  PAYSLIP
+  BANK_STATEMENT
+  EMPLOYMENT_LETTER
+  UTILITY_BILL
+  OTHER
+}
+
+enum GuarantorRelationship {
+  SPOUSE
+  PARENT
+  CHILD
+  SIBLING
+  RELATIVE
+  FRIEND
+  COLLEAGUE
+  EMPLOYER
+  OTHER
+}
+
+enum GuarantorStatus {
+  ACTIVE
+  RELEASED
+  DEFAULTED
+}
+
+enum CollectionStage {
+  CURRENT
+  REMINDER
+  PROMISE_TO_PAY
+  FIELD_VISIT
+  LEGAL
+  WRITTEN_OFF
+}
+
+enum CollectionResult {
+  OPEN
+  PAID
+  PROMISE
+  FAILED
+  LEGAL_ACTION
+}
+
+enum NotificationType {
+  SMS
+  EMAIL
+  PUSH
+  WHATSAPP
+}
+
+enum NotificationStatus {
+  PENDING
+  SENT
+  FAILED
+}
+
+enum TransactionType {
+  DISBURSEMENT
+  REPAYMENT
+  INTEREST
+  PENALTY
+  FEE
+  WAIVER
+  WRITE_OFF
+  ADJUSTMENT
+  OVERDUE
+}
+
+enum AuditAction {
+  LOGIN
+  LOGOUT
+
+  CREATE_USER
+  UPDATE_USER
+  DELETE_USER
+
+  CREATE_CUSTOMER
+  UPDATE_CUSTOMER
+  DELETE_CUSTOMER
+
+  CREATE_LOAN_PRODUCT
+  UPDATE_LOAN_PRODUCT
+  DELETE_LOAN_PRODUCT
+
+  CREATE_LOAN_APPLICATION
+  UPDATE_LOAN_APPLICATION
+  APPROVE_LOAN_APPLICATION
+  REJECT_LOAN_APPLICATION
+
+  CREATE_LOAN
+  APPROVE_LOAN
+  DISBURSE_LOAN
+  UPDATE_LOAN
+  CLOSE_LOAN
+
+  RECORD_REPAYMENT
+  REVERSE_REPAYMENT
+
+  MARK_OVERDUE
+  APPLY_PENALTY
+
+  WAIVE_PENALTY
+
+  CREATE_COLLECTION
+  UPDATE_COLLECTION
+
+  WRITE_OFF_LOAN
+  REVERSE_WRITE_OFF
+
+  SYSTEM
+}
+
+///////////////////////////////////////////////////////////
+// BRANCH
+///////////////////////////////////////////////////////////
+
+model Branch {
+  id       String  @id @default(cuid())
+  code     String  @unique
+  name     String
+  address  String?
+  phone    String?
+  email    String?
+  isActive Boolean @default(true)
+
+  users     User[]
+  customers Customer[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([code])
+}
+
+///////////////////////////////////////////////////////////
+// USER
+///////////////////////////////////////////////////////////
+
+model User {
+  id String @id @default(cuid())
+
+  firstName String
+  lastName  String
+
+  email    String @unique
+  password String
+
+  role UserRole
+
+  isActive Boolean @default(true)
+
+  lastLogin DateTime?
+
+  branchId String?
+  branch   Branch? @relation(fields: [branchId], references: [id], onDelete: SetNull)
+
+  // Loan Applications
+  reviewedApplications LoanApplication[]        @relation("ApplicationReviewer")
+  approvedApplications LoanApplication[]        @relation("ApplicationApprover")
+  applicationHistory   LoanApplicationHistory[]
+
+  // Credit Process
+  assessments   CreditAssessment[]
+  approvals     Approval[]
+  disbursements Disbursement[]
+
+  // Loan Servicing
+  repayments   Repayment[]          @relation("ReceivedBy")
+  collections  CollectionActivity[]
+  transactions LoanTransaction[]
+  writeOffs    WriteOff[]
+
+  // Customer Documents
+  uploadedDocuments CustomerDocument[]
+
+  // System
+  notifications Notification[]
+  auditLogs     AuditLog[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email])
+  @@index([role])
+  @@index([branchId])
+}
+
+///////////////////////////////////////////////////////////
+// CUSTOMER
+///////////////////////////////////////////////////////////
+
 model Customer {
-  id            String   @id @default(cuid())
-  customerNo    String   @unique
-  firstName     String
-  lastName      String
-  mobileNumber  String   @unique
-  nrc           String   @unique
-  email         String?
-  dateOfBirth   DateTime?
-  gender        String?
-  status        String   @default("PENDING_KYC")
-  creditLimit   Decimal  @default(500)
+  id String @id @default(cuid())
+
+  customerNo String @unique
+
+  firstName  String
+  middleName String?
+  lastName   String
+
+  mobileNumber     String  @unique
+  alternativePhone String?
+
+  email String?
+
+  nrc String @unique
+
+  dateOfBirth DateTime?
+
+  gender Gender?
+
+  occupation String?
+  employer   String?
+
+  monthlyIncome Decimal?
+
+  physicalAddress String?
+  city            String?
+
+  branchId String?
+  branch   Branch? @relation(fields: [branchId], references: [id], onDelete: SetNull)
+
+  status CustomerStatus @default(PENDING_KYC)
+
+  standing CustomerStanding @default(NEW)
+
+  creditLimit Decimal @default(500)
+
   availableLimit Decimal @default(500)
-  standing      String   @default("NEW")
-  isVip         Boolean  @default(false)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+
+  totalLoans Int @default(0)
+
+  successfulLoans Int @default(0)
+
+  totalBorrowed Decimal @default(0)
+
+  totalRepaid Decimal @default(0)
+
+  isVip Boolean @default(false)
+
+  isActive Boolean @default(true)
+
+  documents CustomerDocument[]
+
+  loanApplications LoanApplication[]
+
+  loans Loan[]
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  @@index([mobileNumber])
+  @@index([nrc])
+  @@index([status])
+}
+
+///////////////////////////////////////////////////////////
+// CUSTOMER DOCUMENT
+///////////////////////////////////////////////////////////
+
+model CustomerDocument {
+  id String @id @default(cuid())
+
+  customerId   String
+  customer     Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  uploadedById String?
+  uploadedBy   User?    @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
+
+  documentType DocumentType
+
+  fileName String
+
+  fileUrl String
+
+  uploadedAt DateTime @default(now())
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  @@index([customerId])
+}
+
+///////////////////////////////////////////////////////////
+// LOAN PRODUCT
+///////////////////////////////////////////////////////////
+
+model LoanProduct {
+  id String @id @default(cuid())
+
+  productCode String @unique
+
+  productName String @unique
+
+  description String?
+
+  minAmount Decimal
+
+  maxAmount Decimal
+
+  interestRate Decimal
+
+  interestCalculationMethod InterestCalculationMethod
+
+  processingFee Decimal @default(0)
+
+  penaltyRate Decimal @default(0)
+
+  gracePeriodDays Int @default(0)
+
+  termDays Int
+
+  currency Currency @default(ZMW)
+
+  maxLoansPerCustomer Int @default(1)
+
+  isActive Boolean @default(true)
+
+  loanApplications LoanApplication[]
+
+  loans Loan[]
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  @@index([productCode])
+  @@index([isActive])
+}
+
+///////////////////////////////////////////////////////////
+// GUARANTOR
+///////////////////////////////////////////////////////////
+
+model Guarantor {
+  id String @id @default(cuid())
+
+  firstName String
+
+  middleName String?
+
+  lastName String
+
+  mobileNumber String
+
+  alternativePhone String?
+
+  email String?
+
+  nrc String @unique
+
+  occupation String?
+
+  employer String?
+
+  monthlyIncome Decimal?
+
+  physicalAddress String?
+
+  city String?
+
+  isActive Boolean @default(true)
+
+  applications ApplicationGuarantor[]
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  @@index([mobileNumber])
+  @@index([nrc])
+}
+
+///////////////////////////////////////////////////////////
+// LOAN APPLICATION
+///////////////////////////////////////////////////////////
+
+model LoanApplication {
+  id String @id @default(cuid())
+
+  applicationNumber String @unique
+
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Restrict)
+
+  loanProductId String
+  loanProduct   LoanProduct @relation(fields: [loanProductId], references: [id], onDelete: Restrict)
+
+  requestedAmount Decimal
+
+  requestedTermDays Int
+
+  purpose LoanPurpose
+
+  purposeDescription String?
+
+  remarks String?
+
+  status LoanApplicationStatus @default(DRAFT)
+
+  submittedAt DateTime?
+
+  reviewedAt DateTime?
+
+  approvedAt DateTime?
+
+  rejectedAt DateTime?
+
+  cancelledAt DateTime?
+
+  disbursedAt DateTime?
+
+  // Reviewer
+  reviewedById String?
+  reviewedBy   User?   @relation("ApplicationReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+
+  // Approver
+  approvedById String?
+  approvedBy   User?   @relation("ApplicationApprover", fields: [approvedById], references: [id], onDelete: SetNull)
+
+  guarantors ApplicationGuarantor[]
+
+  assessments CreditAssessment[]
+
+  approvals Approval[]
+
+  disbursement Disbursement?
+
+  history LoanApplicationHistory[]
+
+  loan Loan?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  @@index([customerId])
+  @@index([loanProductId])
+  @@index([status])
+  @@index([applicationNumber])
+}
+
+///////////////////////////////////////////////////////////
+// APPLICATION GUARANTOR
+///////////////////////////////////////////////////////////
+
+model ApplicationGuarantor {
+  id String @id @default(cuid())
+
+  applicationId String
+
+  application LoanApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  guarantorId String
+
+  guarantor Guarantor @relation(fields: [guarantorId], references: [id], onDelete: Restrict)
+
+  relationship GuarantorRelationship
+
+  status GuarantorStatus @default(ACTIVE)
+
+  createdAt DateTime @default(now())
+
+  @@unique([applicationId, guarantorId])
+  @@index([applicationId])
+  @@index([guarantorId])
+}
+
+///////////////////////////////////////////////////////////
+// CREDIT ASSESSMENT
+///////////////////////////////////////////////////////////
+
+model CreditAssessment {
+  id String @id @default(cuid())
+
+  applicationId String
+
+  application LoanApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  assessorId String
+
+  assessor User @relation(fields: [assessorId], references: [id], onDelete: Restrict)
+
+  creditScore Int?
+
+  affordabilityScore Int?
+
+  debtServiceRatio Decimal?
+
+  recommendation ApplicationDecision @default(PENDING)
+
+  remarks String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  @@index([applicationId])
+  @@index([assessorId])
+}
+
+///////////////////////////////////////////////////////////
+// APPROVAL
+///////////////////////////////////////////////////////////
+
+model Approval {
+  id String @id @default(cuid())
+
+  applicationId String
+
+  application LoanApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  approverId String
+
+  approver User @relation(fields: [approverId], references: [id], onDelete: Restrict)
+
+  decision ApplicationDecision
+
+  approvedAmount Decimal?
+
+  approvedTermDays Int?
+
+  interestRate Decimal?
+
+  remarks String?
+
+  approvedAt DateTime @default(now())
+
+  createdAt DateTime @default(now())
+
+  @@index([applicationId])
+  @@index([approverId])
+}
+
+///////////////////////////////////////////////////////////
+// DISBURSEMENT
+///////////////////////////////////////////////////////////
+
+model Disbursement {
+  id String @id @default(cuid())
+
+  applicationId String @unique
+
+  application LoanApplication @relation(fields: [applicationId], references: [id], onDelete: Restrict)
+
+  disbursedById String
+
+  disbursedBy User @relation(fields: [disbursedById], references: [id], onDelete: Restrict)
+
+  amount Decimal
+
+  referenceNumber String @unique
+
+  bankName String?
+
+  bankAccountNumber String?
+
+  mobileMoneyNumber String?
+
+  transactionReference String?
+
+  remarks String?
+
+  disbursedAt DateTime @default(now())
+
+  createdAt DateTime @default(now())
+
+  @@index([referenceNumber])
+  @@index([disbursedById])
+}
+
+///////////////////////////////////////////////////////////
+// APPLICATION HISTORY
+///////////////////////////////////////////////////////////
+
+model LoanApplicationHistory {
+  id String @id @default(cuid())
+
+  applicationId String
+
+  application LoanApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  userId String?
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  action String
+
+  oldStatus LoanApplicationStatus?
+
+  newStatus LoanApplicationStatus?
+
+  remarks String?
+
+  createdAt DateTime @default(now())
+
+  @@index([applicationId])
+  @@index([userId])
+}
+
+///////////////////////////////////////////////////////////
+// LOAN
+///////////////////////////////////////////////////////////
+
+model Loan {
+  id String @id @default(cuid())
+
+  loanNumber String @unique
+
+  applicationId String @unique
+
+  application LoanApplication @relation(fields: [applicationId], references: [id], onDelete: Restrict)
+
+  customerId String
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Restrict)
+
+  loanProductId String
+
+  loanProduct LoanProduct @relation(fields: [loanProductId], references: [id], onDelete: Restrict)
+
+  principalAmount Decimal
+
+  interestRate Decimal
+
+  interestCalculationMethod InterestCalculationMethod
+
+  processingFee Decimal @default(0)
+
+  penaltyRate Decimal @default(0)
+
+  termDays Int
+
+  currency Currency @default(ZMW)
+
+  totalInterest Decimal
+
+  totalRepayable Decimal
+
+  outstandingPrincipal Decimal
+
+  outstandingInterest Decimal
+
+  outstandingPenalty Decimal @default(0)
+
+  approvedAt DateTime?
+
+  disbursedAt DateTime?
+
+  maturityDate DateTime?
+
+  closedAt DateTime?
+
+  status LoanStatus @default(PENDING)
+
+  isActive Boolean @default(true)
+
+  installments LoanInstallment[]
+
+  repayments Repayment[]
+
+  transactions LoanTransaction[]
+
+  penalties LoanPenalty[]
+
+  collections CollectionActivity[]
+
+  writeOff WriteOff?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  @@index([loanNumber])
+  @@index([customerId])
+  @@index([loanProductId])
+  @@index([status])
+}
+
+///////////////////////////////////////////////////////////
+// LOAN INSTALLMENT
+///////////////////////////////////////////////////////////
+
+model LoanInstallment {
+  id String @id @default(cuid())
+
+  loanId String
+
+  loan Loan @relation(fields: [loanId], references: [id], onDelete: Cascade)
+
+  installmentNumber Int
+
+  dueDate DateTime
+
+  openingBalance Decimal
+
+  principalDue Decimal
+
+  interestDue Decimal
+
+  penaltyDue Decimal @default(0)
+
+  totalDue Decimal
+
+  principalPaid Decimal @default(0)
+
+  interestPaid Decimal @default(0)
+
+  penaltyPaid Decimal @default(0)
+
+  totalPaid Decimal @default(0)
+
+  closingBalance Decimal
+
+  isPaid Boolean @default(false)
+
+  paidAt DateTime?
+
+  repayments Repayment[]
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  @@unique([loanId, installmentNumber])
+  @@index([loanId])
+  @@index([dueDate])
+  @@index([isPaid])
+}
+
+///////////////////////////////////////////////////////////
+// REPAYMENT
+///////////////////////////////////////////////////////////
+
+model Repayment {
+  id String @id @default(cuid())
+
+  receiptNumber String @unique
+
+  loanId String
+
+  loan Loan @relation(fields: [loanId], references: [id], onDelete: Restrict)
+
+  installmentId String?
+
+  installment LoanInstallment? @relation(fields: [installmentId], references: [id], onDelete: SetNull)
+
+  amountPaid Decimal
+
+  principalPaid Decimal
+
+  interestPaid Decimal
+
+  penaltyPaid Decimal @default(0)
+
+  paymentMethod RepaymentMethod
+
+  transactionReference String?
+
+  receivedById String?
+
+  receivedBy User? @relation("ReceivedBy", fields: [receivedById], references: [id], onDelete: SetNull)
+
+  remarks String?
+
+  paymentDate DateTime @default(now())
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  @@index([loanId])
+  @@index([installmentId])
+  @@index([paymentDate])
+  @@index([receiptNumber])
+}
+
+///////////////////////////////////////////////////////////
+// LOAN TRANSACTION (LEDGER)
+///////////////////////////////////////////////////////////
+
+model LoanTransaction {
+  id String @id @default(cuid())
+
+  loanId String
+
+  loan Loan @relation(fields: [loanId], references: [id], onDelete: Cascade)
+
+  transactionType TransactionType
+
+  amount Decimal
+
+  principalComponent Decimal @default(0)
+
+  interestComponent Decimal @default(0)
+
+  penaltyComponent Decimal @default(0)
+
+  balanceAfter Decimal?
+
+  reference String?
+
+  narration String?
+
+  createdById String?
+
+  createdBy User? @relation(fields: [createdById], references: [id], onDelete: SetNull)
+
+  transactionDate DateTime @default(now())
+
+  createdAt DateTime @default(now())
+
+  @@index([loanId])
+  @@index([transactionType])
+  @@index([transactionDate])
+}
+
+///////////////////////////////////////////////////////////
+// COLLECTION ACTIVITY
+///////////////////////////////////////////////////////////
+
+model CollectionActivity {
+  id String @id @default(cuid())
+
+  loanId String
+
+  loan Loan @relation(fields: [loanId], references: [id], onDelete: Cascade)
+
+  officerId String?
+
+  officer User? @relation(fields: [officerId], references: [id], onDelete: SetNull)
+
+  stage CollectionStage
+
+  result CollectionResult
+
+  amountPromised Decimal?
+
+  promisedPaymentDate DateTime?
+
+  nextFollowUpDate DateTime?
+
+  remarks String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  @@index([loanId])
+  @@index([stage])
+  @@index([nextFollowUpDate])
+}
+
+model LoanPenalty {
+  id String @id @default(cuid())
+
+  loanId String
+  loan   Loan   @relation(fields: [loanId], references: [id], onDelete: Cascade)
+
+  amount Decimal
+
+  penaltyRate Decimal
+
+  appliedDate DateTime
+
+  createdAt DateTime @default(now())
+
+  @@unique([loanId, appliedDate])
+  @@index([loanId])
+}
+
+///////////////////////////////////////////////////////////
+// WRITE OFF
+///////////////////////////////////////////////////////////
+
+model WriteOff {
+  id String @id @default(cuid())
+
+  loanId String @unique
+
+  loan Loan @relation(fields: [loanId], references: [id], onDelete: Cascade)
+
+  approvedById String
+
+  approvedBy User @relation(fields: [approvedById], references: [id], onDelete: Restrict)
+
+  amount Decimal
+
+  reason String
+
+  writtenOffAt DateTime @default(now())
+
+  createdAt DateTime @default(now())
+
+  @@index([approvedById])
+}
+
+///////////////////////////////////////////////////////////
+// NOTIFICATION
+///////////////////////////////////////////////////////////
+
+model Notification {
+  id String @id @default(cuid())
+
+  userId String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  type NotificationType
+
+  subject String?
+
+  message String
+
+  status NotificationStatus @default(PENDING)
+
+  // NEW
+  isRead Boolean @default(false)
+
+  // NEW
+  readAt DateTime?
+
+  sentAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([status])
+  @@index([type])
+  @@index([isRead])
+}
+///////////////////////////////////////////////////////////
+// AUDIT LOG
+///////////////////////////////////////////////////////////
+
+model AuditLog {
+  id String @id @default(cuid())
+
+  userId String?
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  entity String
+
+  entityId String
+
+  action String
+
+  oldValues Json?
+
+  newValues Json?
+
+  ipAddress String?
+
+  userAgent String?
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([entity])
+  @@index([entityId])
+  @@index([action])
+  @@index([createdAt])
+}
+
+///////////////////////////////////////////////////////////
+// SYSTEM SETTINGS
+///////////////////////////////////////////////////////////
+
+model SystemSetting {
+  id String @id @default(cuid())
+
+  key String @unique
+
+  value String
+
+  description String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
 }

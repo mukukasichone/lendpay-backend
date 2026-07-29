@@ -1,0 +1,88 @@
+.
+├── package-lock.json
+├── package.json
+├── prisma
+│   ├── migrations
+│   │   ├── 20260722125045_init
+│   │   │   └── migration.sql
+│   │   └── migration_lock.toml
+│   ├── schema.prisma
+│   └── seed.ts
+├── project-tree.txt
+├── src
+│   ├── app.ts
+│   ├── common
+│   │   └── errors
+│   │       ├── AppError.ts
+│   │       ├── BadRequestError.ts
+│   │       ├── ConflictError.ts
+│   │       ├── ForbiddenError.ts
+│   │       ├── InternalServerError.ts
+│   │       ├── NotFoundError.ts
+│   │       ├── UnauthorizedError.ts
+│   │       ├── ValidationError.ts
+│   │       └── index.ts
+│   ├── config
+│   │   └── prisma.ts
+│   ├── constants
+│   ├── controllers
+│   ├── interfaces
+│   ├── jobs
+│   ├── middleware
+│   │   ├── authenticate.middleware.ts
+│   │   ├── authorize.middleware.ts
+│   │   ├── error.middleware.ts
+│   │   └── validate.middleware.ts
+│   ├── modules
+│   │   ├── auth
+│   │   │   ├── auth.controller.ts
+│   │   │   ├── auth.repository.ts
+│   │   │   ├── auth.routes.ts
+│   │   │   ├── auth.service.ts
+│   │   │   ├── auth.types.ts
+│   │   │   ├── auth.validation.ts
+│   │   │   └── index.ts
+│   │   ├── customer
+│   │   │   ├── customer.controller.ts
+│   │   │   ├── customer.repository.ts
+│   │   │   ├── customer.routes.ts
+│   │   │   ├── customer.service.ts
+│   │   │   └── customer.validation.ts
+│   │   ├── loan
+│   │   │   ├── loan.controller.ts
+│   │   │   ├── loan.repository.ts
+│   │   │   ├── loan.routes.ts
+│   │   │   ├── loan.service.ts
+│   │   │   └── loan.validation.ts
+│   │   ├── loanProduct
+│   │   │   ├── loanProduct.controller.ts
+│   │   │   ├── loanProduct.repository.ts
+│   │   │   ├── loanProduct.routes.ts
+│   │   │   ├── loanProduct.service.ts
+│   │   │   └── loanProduct.validation.ts
+│   │   ├── repayment
+│   │   │   ├── repayment.controller.ts
+│   │   │   ├── repayment.repository.ts
+│   │   │   ├── repayment.routes.ts
+│   │   │   ├── repayment.service.ts
+│   │   │   └── repayment.validation.ts
+│   │   ├── reporting
+│   │   ├── treasury
+│   │   └── user
+│   │       ├── user.controller.ts
+│   │       ├── user.repository.ts
+│   │       ├── user.routes.ts
+│   │       ├── user.service.ts
+│   │       └── user.validation.ts
+│   ├── notifications
+│   ├── reports
+│   ├── server.ts
+│   ├── treasury
+│   ├── types
+│   └── utils
+│       ├── jwt.ts
+│       └── password.ts
+├── tests
+└── tsconfig.json
+
+28 directories, 58 files
