@@ -1,0 +1,2859 @@
+{
+  "info": {
+  "_postman_id": "721980ae-fbbd-4b93-8dcd-efe30780b1de",
+  "name": "LendPay API v1.0",
+  "description": "# LendPay API v1.0\n\nLendPay is a modern Loan Management System (LMS) API designed for microfinance institutions, SACCOs, digital lenders and financial institutions.\n\n## Features\n\n- Authentication & Authorization\n- User Management\n- Customer Management\n- Loan Products\n- Loan Applications\n- Credit Assessments\n- Loan Approvals\n- Loan Disbursement\n- Loan Portfolio Management\n- Repayments\n- Collections\n- Penalty Engine\n- Overdue Processing\n- Write-offs\n- Loan Ledger\n- Notifications\n- Reports\n- Dashboard Analytics\n- Audit Logs\n\n## Authentication\n\nAuthenticate using:\n\nAuthorization: Bearer {{accessToken}}\n\nThe Login endpoint returns a JWT token which should be saved as {{accessToken}} in your environment.\n\n## Environment Variables\n\nbaseUrl\naccessToken\ncustomerId\nloanProductId\napplicationId\nguarantorId\nloanId\nrepaymentId\ncollectionActivityId\nnotificationId\nuserId\n\n## Version\n\nv1.0.0\n\n© 2026 LendPay",
+  "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+  "_exporter_id": "56705287"
+},
+  "item": [
+    {
+      "name": "🔐 Authentication",
+      "item": [
+        {
+          "name": "Login request",
+          "request": { "auth":{"type":"noauth"},
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@lendpay.com\",\n  \"password\": \"Admin@123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "❤️ Health",
+      "item": [
+        {
+          "name": "GET Health",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response is JSON\", function () {",
+                  "    pm.response.to.be.json;",
+                  "});",
+                  "",
+                  "pm.test(\"Health response has status field\", function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json).to.be.an(\"object\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "health"
+              ]
+            },
+            "description": "Generated from cURL: curl --request GET '{{baseUrl}}/health'"
+          },
+          "response": []
+        },
+        {
+          "name": "Create credit assessment",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/credit-assessments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "credit-assessments"
+              ]
+            },
+            "description": "Generated from cURL: curl --request POST '{{baseUrl}}/api/credit-assessments'"
+          },
+          "response": []
+        },
+        {
+          "name": "Get all credit assessments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/credit-assessments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "credit-assessments"
+              ]
+            },
+            "description": "Generated from cURL: curl --request GET '{{baseUrl}}/api/credit-assessments'"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "👤 Users",
+      "item": [
+        {
+          "name": "Create User",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"john.doe@lendpay.com\",\n  \"password\": \"Password123\",\n  \"role\": \"LOAN_OFFICER\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Users",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User By ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/<id>",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "<id>"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Johnny\",\n  \"role\": \"COLLECTIONS\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/<id>",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "<id>"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/<id>",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "<id>"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Deactivate User",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/id/deactivate",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "id",
+                "deactivate"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Activate User",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/cmrupjusq0000rt2xi98yj0tz/activate",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "id",
+                "activate"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/change-password",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "change-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reset User Password",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/:id/reset-password",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                ":id",
+                "reset-password"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "👥 Customers",
+      "item": [
+        {
+          "name": "POST Create Customer",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Customer created successfully\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "",
+                  "pm.environment.set(\"customerId\", json.data.id);",
+                  "",
+                  "console.log(\"Customer ID:\", json.data.id);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "const phone = \"097\" + Math.floor(1000000 + Math.random() * 9000000);",
+                  "pm.environment.set(\"mobileNumber\", phone);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerNo\": \"CUS{{$timestamp}}\",\n  \"firstName\": \"{{$randomFirstName}}\",\n  \"lastName\": \"{{$randomLastName}}\",\n  \"mobileNumber\": \"{{mobileNumber}}\",\n  \"nrc\": \"{{$randomInt}}/78/1\",\n  \"email\": \"{{$randomEmail}}\",\n  \"creditLimit\": 500,\n  \"availableLimit\": 500\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/customers",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "customers"
+              ]
+            },
+            "description": "Generated from cURL: curl --request POST '{{baseUrl}}/api/customers'"
+          },
+          "response": []
+        },
+        {
+          "name": "GET Get All Customers",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response is JSON\", function () {",
+                  "    pm.response.to.be.json;",
+                  "});",
+                  "",
+                  "pm.test(\"Response is an object or array\", function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json).to.satisfy(function(v) {",
+                  "        return typeof v === \"object\";",
+                  "    });",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/customers",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "customers"
+              ]
+            },
+            "description": "Generated from cURL: curl --request GET '{{baseUrl}}/api/customers'"
+          },
+          "response": []
+        },
+        {
+          "name": "GET Get Customer By ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response is JSON\", function () {",
+                  "    pm.response.to.be.json;",
+                  "});",
+                  "",
+                  "pm.test(\"Response contains customer data\", function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json).to.be.an(\"object\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/customers/{{customerId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "customers",
+                "{{customerId}}"
+              ]
+            },
+            "description": "Generated from cURL: curl --request GET '{{baseUrl}}/api/customers/{{customerId}}'"
+          },
+          "response": []
+        },
+        {
+          "name": "PUT Update Customer",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 or 204\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 204]);",
+                  "});",
+                  "",
+                  "pm.test(\"Response is valid\", function () {",
+                  "    if (pm.response.code === 200) {",
+                  "        pm.response.to.be.json;",
+                  "        var json = pm.response.json();",
+                  "        pm.expect(json).to.be.an(\"object\");",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Jane\",\n  \"lastName\": \"Smith\",\n  \"email\": \"jane.smith@example.com\",\n  \"phone\": \"+1-555-000-5678\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/customers/{{customerId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "customers",
+                "{{customerId}}"
+              ]
+            },
+            "description": "Generated from cURL: curl --request PUT '{{baseUrl}}/api/customers/{{customerId}}'"
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH Activate Customer",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 or 204\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 204]);",
+                  "});",
+                  "",
+                  "pm.test(\"Response is valid\", function () {",
+                  "    if (pm.response.code === 200) {",
+                  "        pm.response.to.be.json;",
+                  "        var json = pm.response.json();",
+                  "        pm.expect(json).to.be.an(\"object\");",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/customers/{{customerId}}/activate",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "customers",
+                "{{customerId}}",
+                "activate"
+              ]
+            },
+            "description": "Generated from cURL: curl --request PATCH '{{baseUrl}}/api/customers/{{customerId}}/activate'"
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH Deactivate Customer",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 or 204\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 204]);",
+                  "});",
+                  "",
+                  "pm.test(\"Response is valid\", function () {",
+                  "    if (pm.response.code === 200) {",
+                  "        pm.response.to.be.json;",
+                  "        var json = pm.response.json();",
+                  "        pm.expect(json).to.be.an(\"object\");",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/customers/{{customerId}}/deactivate",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "customers",
+                "{{customerId}}",
+                "deactivate"
+              ]
+            },
+            "description": "Generated from cURL: curl --request PATCH '{{baseUrl}}/api/customers/{{customerId}}/deactivate'"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "💳 Loan Products",
+      "item": [
+        {
+          "name": "POST Create Loan Product",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Loan Product created successfully\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "",
+                  "pm.environment.set(\"loanProductId\", json.data.id);",
+                  "",
+                  "console.log(\"Loan Product ID:\", json.data.id);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productCode\": \"PL001\",\n  \"productName\": \"Personal Loan Standard\",\n  \"description\": \"Test product for repayment audit\",\n  \"minAmount\": 1000,\n  \"maxAmount\": 50000,\n  \"interestRate\": 15,\n  \"interestCalculationMethod\": \"SIMPLE_FIXED\",\n  \"processingFee\": 100,\n  \"penaltyRate\": 5,\n  \"termDays\": 30,\n  \"currency\": \"ZMW\",\n  \"maxLoansPerCustomer\": 1,\n  \"isActive\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/loan-products",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "loan-products"
+              ]
+            },
+            "description": "Generated from cURL: curl --request POST '{{baseUrl}}/api/loan-products'"
+          },
+          "response": []
+        },
+        {
+          "name": "GET Get All Loan Products",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response is JSON\", function () {",
+                  "    pm.response.to.be.json;",
+                  "});",
+                  "",
+                  "pm.test(\"Response is an object or array\", function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json).to.satisfy(function(v) {",
+                  "        return typeof v === \"object\";",
+                  "    });",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/loan-products",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "loan-products"
+              ]
+            },
+            "description": "Generated from cURL: curl --request GET '{{baseUrl}}/api/loan-products'"
+          },
+          "response": []
+        },
+        {
+          "name": "GET Get Loan Product By ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response is JSON\", function () {",
+                  "    pm.response.to.be.json;",
+                  "});",
+                  "",
+                  "pm.test(\"Response contains loan product data\", function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json).to.be.an(\"object\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/loan-products/{{loanProductId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "loan-products",
+                "{{loanProductId}}"
+              ]
+            },
+            "description": "Generated from cURL: curl --request GET '{{baseUrl}}/api/loan-products/{{loanProductId}}'"
+          },
+          "response": []
+        },
+        {
+          "name": "PUT Update Loan Product",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 or 204\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 204]);",
+                  "});",
+                  "",
+                  "pm.test(\"Response is valid\", function () {",
+                  "    if (pm.response.code === 200) {",
+                  "        pm.response.to.be.json;",
+                  "        var json = pm.response.json();",
+                  "        pm.expect(json).to.be.an(\"object\");",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Personal Loan Updated\",\n  \"interestRate\": 11.0,\n  \"termMonths\": 36,\n  \"description\": \"Updated personal loan product\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/loan-products/{{loanProductId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "loan-products",
+                "{{loanProductId}}"
+              ]
+            },
+            "description": "Generated from cURL: curl --request PUT '{{baseUrl}}/api/loan-products/{{loanProductId}}'"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "📝 Loan Applications",
+      "item": [
+        {
+          "name": "Create Loan Application",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "disabled": false
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerId\": \"{{customerId}}\",\n  \"loanProductId\": \"{{loanProductId}}\",\n  \"requestedAmount\": 5000,\n  \"requestedTermDays\": 30,\n  \"purpose\": \"BUSINESS\",\n  \"purposeDescription\": \"Working capital\",\n  \"remarks\": \"First application\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/loan-applications",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "loan-applications"
+              ]
+            },
+            "description": "Generated from cURL: curl --request POST '{{baseUrl}}/api/loan-applications' --header 'Content-Type: application/json' --data-raw '{\n  \"customerId\": \"{{customerId}}\",\n  \"loanProductId\": \"{{loanProductId}}\",\n  \"requestedAmount\": 5000,\n  \"requestedTermDays\": 30,\n  \"purpose\": \"BUSINESS\",\n  \"purposeDescription\": \"Working capital\",\n  \"remarks\": \"First application\"\n}'"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Loan Applications",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/loan-applications",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "loan-applications"
+              ]
+            },
+            "description": "Generated from cURL: curl --request GET '{{baseUrl}}/api/loan-applications'"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Loan Application By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/loan-applications/{id}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "loan-applications",
+                "{id}"
+              ]
+            },
+            "description": "Generated from cURL: curl --request GET '{{baseUrl}}/api/loan-applications/{id}'"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Loan Application",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "disabled": false
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"requestedAmount\": 7000,\n  \"remarks\": \"Updated amount\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/loan-applications/{id}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "loan-applications",
+                "{id}"
+              ]
+            },
+            "description": "Generated from cURL: curl --request PUT '{{baseUrl}}/api/loan-applications/{id}' --header 'Content-Type: application/json' --data-raw '{\n  \"requestedAmount\": 7000,\n  \"remarks\": \"Updated amount\"\n}'"
+          },
+          "response": []
+        },
+        {
+          "name": "Add Guarantor To Loan Application",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "disabled": false
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"guarantorId\": \"{{guarantorId}}\",\n  \"relationship\": \"FRIEND\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/loan-applications/{id}/guarantors",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "loan-applications",
+                "{id}",
+                "guarantors"
+              ]
+            },
+            "description": "Generated from cURL: curl --request POST '{{baseUrl}}/api/loan-applications/{id}/guarantors' --header 'Content-Type: application/json' --data-raw '{\n  \"guarantorId\": \"{{guarantorId}}\",\n  \"relationship\": \"FRIEND\"\n}'"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Loan Application",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/loan-applications/{id}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "loan-applications",
+                "{id}"
+              ]
+            },
+            "description": "Generated from cURL: curl --request DELETE '{{baseUrl}}/api/loan-applications/{id}'"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "📊 Credit Assessment",
+      "item": [
+        {
+          "name": "Create Credit Assessment",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"applicationId\": \"id\",\n  \"assessorId\": \"id\",\n  \"creditScore\": 82,\n  \"affordabilityScore\": 90,\n  \"debtServiceRatio\": 25,\n  \"recommendation\": \"RECOMMEND_APPROVAL\",\n  \"remarks\": \"Customer qualifies for requested amount.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/credit-assessments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "credit-assessments"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "View all Credit Assessments",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/credit-assessments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "credit-assessments"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "✅ Approvals",
+      "item": [
+        {
+          "name": "approve",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"applicationId\": \"id\",\n  \"approverId\": \"id\",\n  \"decision\": \"APPROVED\",\n  \"approvedAmount\": 5000,\n  \"approvedTermDays\": 30,\n  \"interestRate\": 15,\n  \"remarks\": \"Approved after review.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/approvals",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "approvals"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reject",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"applicationId\": \"id\",\n  \"approverId\": \"id\",\n  \"decision\": \"REJECTED\",\n  \"remarks\": \"Customer failed affordability assessment.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/approvals",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "approvals"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "💸 Disbursements",
+      "item": [
+        {
+          "name": "Disburse Loan",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"applicationId\": \"id\",\n  \"disbursedById\": \"id\",\n  \"amount\": 3000,\n  \"bankName\": \"Airtelmoney\",\n  \"bankAccountNumber\": \"1234567890\",\n  \"transactionReference\": \"TXN000001\",\n  \"remarks\": \"Funds transferred successfully\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/disbursements",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "disbursements"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Disbursements",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/disbursements",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "disbursements"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "💰 Loans",
+      "item": [
+        {
+          "name": "GET Get All Loans",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response is JSON\", function () {",
+                  "    pm.response.to.be.json;",
+                  "});",
+                  "",
+                  "pm.test(\"Response is an object or array\", function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json).to.satisfy(function(v) {",
+                  "        return typeof v === \"object\";",
+                  "    });",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/loans",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "loans"
+              ]
+            },
+            "description": "Generated from cURL: curl --request GET '{{baseUrl}}/api/loans'"
+          },
+          "response": []
+        },
+        {
+          "name": "GET Get Loan By ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response is JSON\", function () {",
+                  "    pm.response.to.be.json;",
+                  "});",
+                  "",
+                  "pm.test(\"Response contains loan data\", function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json).to.be.an(\"object\");",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/loans/id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "loans",
+                "id"
+              ]
+            },
+            "description": "Generated from cURL: curl --request GET '{{baseUrl}}/api/loans/{{loanId}}'"
+          },
+          "response": []
+        },
+        {
+          "name": "PUT Update Loan",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 or 204\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 204]);",
+                  "});",
+                  "",
+                  "pm.test(\"Response is valid\", function () {",
+                  "    if (pm.response.code === 200) {",
+                  "        pm.response.to.be.json;",
+                  "        var json = pm.response.json();",
+                  "        pm.expect(json).to.be.an(\"object\");",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"maturityDate\": \"2026-07-27T08:00:00.000Z\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/loans/id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "loans",
+                "id"
+              ]
+            },
+            "description": "Generated from cURL: curl --request PUT '{{baseUrl}}/api/loans/{{loanId}}'"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "💵 Repayments",
+      "item": [
+        {
+          "name": "POST Create Repayment",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Repayment created successfully\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "",
+                  "pm.environment.set(\"repaymentId\", json.data.id);",
+                  "",
+                  "console.log(\"Repayment ID:\", json.data.id);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"receiptNumber\": \"RCPT-000001\",\n  \"loanId\": \"cms4fgnfd0007rt8awx3or174\",\n  \"amountPaid\": 1000,\n  \"paymentMethod\": \"BANK_TRANSFER\",\n  \"transactionReference\": \"TXN123456789\",\n  \"remarks\": \"First repayment\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/repayments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "repayments"
+              ]
+            },
+            "description": "Generated from cURL: curl --request POST '{{baseUrl}}/api/repayments'"
+          },
+          "response": []
+        },
+        {
+          "name": "GET Get All Repayments",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response is JSON\", function () {",
+                  "    pm.response.to.be.json;",
+                  "});",
+                  "",
+                  "pm.test(\"Response is an object or array\", function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json).to.satisfy(function(v) {",
+                  "        return typeof v === \"object\";",
+                  "    });",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/repayments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "repayments"
+              ]
+            },
+            "description": "Generated from cURL: curl --request GET '{{baseUrl}}/api/repayments'"
+          },
+          "response": []
+        },
+        {
+          "name": "GET Get Repayment By ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response is JSON\", function () {",
+                  "    pm.response.to.be.json;",
+                  "});",
+                  "",
+                  "pm.test(\"Response contains repayment data\", function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json).to.be.an(\"object\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/repayments/{{repaymentId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "repayments",
+                "{{repaymentId}}"
+              ]
+            },
+            "description": "Generated from cURL: curl --request GET '{{baseUrl}}/api/repayments/{{repaymentId}}'"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🛡️ Guarantors",
+      "item": [
+        {
+          "name": "POST Create Guarantor",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "disabled": false
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"John\",\n  \"middleName\": \"Peter\",\n  \"lastName\": \"Banda\",\n  \"mobileNumber\": \"0977123456\",\n  \"alternativePhone\": \"0966123456\",\n  \"email\": \"john.banda@example.com\",\n  \"nrc\": \"123456/12/1\",\n  \"occupation\": \"Teacher\",\n  \"employer\": \"Ministry of Education\",\n  \"monthlyIncome\": 8500,\n  \"physicalAddress\": \"Plot 45, Kabulonga\",\n  \"city\": \"Lusaka\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/guarantors",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "guarantors"
+              ]
+            },
+            "description": "Generated from cURL: curl --request POST '{{baseUrl}}/api/guarantors' --header 'Content-Type: application/json' --data '{\"firstName\":\"<first_name>\",\"lastName\":\"<last_name>\",\"phone\":\"<phone_number>\"}'"
+          },
+          "response": []
+        },
+        {
+          "name": "GET Get All Guarantors",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/guarantors",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "guarantors"
+              ]
+            },
+            "description": "Generated from cURL: curl --request GET '{{baseUrl}}/api/guarantors'"
+          },
+          "response": []
+        },
+        {
+          "name": "GET Get Guarantor By ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/guarantors/id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "guarantors",
+                "id"
+              ]
+            },
+            "description": "Generated from cURL: curl --request GET '{{baseUrl}}/api/guarantors/{{guarantorId}}'"
+          },
+          "response": []
+        },
+        {
+          "name": "PUT Update Guarantor",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "disabled": false
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"firstName\":\"<first_name>\",\"lastName\":\"<last_name>\",\"phone\":\"<phone_number>\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/guarantors/id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "guarantors",
+                "id"
+              ]
+            },
+            "description": "Generated from cURL: curl --request PUT '{{baseUrl}}/api/guarantors/{{guarantorId}}' --header 'Content-Type: application/json' --data '{\"firstName\":\"<first_name>\",\"lastName\":\"<last_name>\",\"phone\":\"<phone_number>\"}'"
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE Delete Guarantor",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/guarantors/id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "guarantors",
+                "id"
+              ]
+            },
+            "description": "Generated from cURL: curl --request DELETE '{{baseUrl}}/api/guarantors/{{guarantorId}}'"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "📞 Collection Activities",
+      "item": [
+        {
+          "name": "POST Create Collection Activity",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "disabled": false
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"loanId\": \"id\",\n  \"officerId\": \"cmrw3h1yo0002rtcqbmxa1f6o\",\n  \"stage\": \"PROMISE_TO_PAY\",\n  \"result\": \"PROMISE\",\n  \"amountPromised\": 1500,\n  \"promisedPaymentDate\": \"2026-07-31T00:00:00.000Z\",\n  \"nextFollowUpDate\": \"2026-08-01T09:00:00.000Z\",\n  \"remarks\": \"Customer promised to pay after month-end salary.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/collection-activities",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "collection-activities"
+              ]
+            },
+            "description": "Generated from cURL: curl --request POST '{{baseUrl}}/api/collection-activities' --header 'Content-Type: application/json' --data '{\"loanId\":\"{{loanId}}\",\"type\":\"payment_reminder\",\"notes\":\"Sample collection activity\"}'"
+          },
+          "response": []
+        },
+        {
+          "name": "GET Get Collection Activity By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/collection-activities/{{collectionActivityId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "collection-activities",
+                "{{collectionActivityId}}"
+              ]
+            },
+            "description": "Generated from cURL: curl --request GET '{{baseUrl}}/api/collection-activities/{{collectionActivityId}}'"
+          },
+          "response": []
+        },
+        {
+          "name": "GET Get All Collection Activities",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/collection-activities",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "collection-activities"
+              ]
+            },
+            "description": "Generated from cURL: curl --request GET '{{baseUrl}}/api/collection-activities'"
+          },
+          "response": []
+        },
+        {
+          "name": "GET Get Collection Activities By Loan ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/collection-activities/loan/{{loanId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "collection-activities",
+                "loan",
+                "{{loanId}}"
+              ]
+            },
+            "description": "Generated from cURL: curl --request GET '{{baseUrl}}/api/collection-activities/loan/{{loanId}}'"
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH Update Collection Activity",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "disabled": false
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"status\":\"completed\",\"notes\":\"Updated collection activity\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/collection-activities/{{collectionActivityId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "collection-activities",
+                "{{collectionActivityId}}"
+              ]
+            },
+            "description": "Generated from cURL: curl --request PATCH '{{baseUrl}}/api/collection-activities/{{collectionActivityId}}' --header 'Content-Type: application/json' --data '{\"status\":\"completed\",\"notes\":\"Updated collection activity\"}'"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🧾 Write-offs",
+      "item": [
+        {
+          "name": "Get Write-off by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/write-offs/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "write-offs",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id"
+                }
+              ]
+            },
+            "description": "Generated from cURL: curl --request GET --url '{{baseUrl}}/api/write-offs/:id'"
+          },
+          "response": []
+        },
+        {
+          "name": "List Write-offs",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/write-offs",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "write-offs"
+              ]
+            },
+            "description": "Generated from cURL: curl --request GET --url '{{baseUrl}}/api/write-offs'"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Write-off",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"loanId\": \"id\",\n  \"approvedById\": \"cmrw3h1yo0002rtcqbmxa1f6o\",\n  \"amount\": 5750,\n  \"reason\": \"Customer defaulted after all recovery efforts failed.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/write-offs",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "write-offs"
+              ]
+            },
+            "description": "Generated from cURL: curl --request POST --url '{{baseUrl}}/api/write-offs'"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "📚 Loan Ledger",
+      "item": [
+        {
+          "name": "Get Loan Transaction By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/loan-transactions/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "loan-transactions",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id"
+                }
+              ]
+            },
+            "description": "Generated from cURL: curl --request GET --url '{{baseUrl}}/api/loan-transactions/:id'"
+          },
+          "response": []
+        },
+        {
+          "name": "List Loan Transactions",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/loan-transactions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "loan-transactions"
+              ]
+            },
+            "description": "Generated from cURL: curl --request GET --url '{{baseUrl}}/api/loan-transactions'"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Loan Transactions By Loan ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/loan-transactions/loan/:loanId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "loan-transactions",
+                "loan",
+                ":loanId"
+              ],
+              "variable": [
+                {
+                  "key": "loanId"
+                }
+              ]
+            },
+            "description": "Generated from cURL: curl --request GET --url '{{baseUrl}}/api/loan-transactions/loan/:loanId'"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "📝 Audit Logs",
+      "item": [
+        {
+          "name": "GET /api/audit-logs",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/audit-logs",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "audit-logs"
+              ]
+            },
+            "description": "Generated from cURL: curl --request GET '{{baseUrl}}/api/audit-logs'"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/audit-logs/:id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/audit-logs/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "audit-logs",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id"
+                }
+              ]
+            },
+            "description": "Generated from cURL: curl --request GET '{{baseUrl}}/api/audit-logs/:id'"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "⏰ Overdue",
+      "item": [
+        {
+          "name": "Run Overdue loans",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/overdue/run",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "overdue",
+                "run"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "⚠️ Penalty Engine",
+      "item": [
+        {
+          "name": "create penalty",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/penalties/run",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "penalties",
+                "run"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "📈 Dashboard",
+      "item": [
+        {
+          "name": "GET /dashboard/summary",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/dashboard/summary",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "dashboard",
+                "summary"
+              ]
+            },
+            "description": "Generated from cURL: curl --request GET --url '{{baseUrl}}/dashboard/summary'"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /dashboard/portfolio",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/dashboard/portfolio",
+              "host": [
+                "{{baseUrl}}/api"
+              ],
+              "path": [
+                "dashboard",
+                "portfolio"
+              ]
+            },
+            "description": "Generated from cURL: curl --request GET --url '{{baseUrl}}/dashboard/portfolio'"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "📑 Reports",
+      "item": [
+        {
+          "name": "All reports",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/reports",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "reports"
+              ]
+            },
+            "description": "Generated from cURL: curl --request GET --url '{{baseUrl}}/reports/disbursements'"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🔔 Notifications",
+      "item": [
+        {
+          "name": "Mark as Read",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/notifications/{{id}}/read",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "notifications",
+                "{{id}}",
+                "read"
+              ]
+            },
+            "description": "Generated from cURL: curl --request PATCH --url '{{baseUrl}}/notifications/{{id}}/read'"
+          },
+          "response": []
+        },
+        {
+          "name": "View All Notifications",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/notifications",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "notifications"
+              ]
+            },
+            "description": "Generated from cURL: curl --request GET --url '{{baseUrl}}/notifications'"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/notifications/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "notifications",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "My Notifications",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/notifications/my",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "notifications",
+                "my"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{accessToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "baseUrl",
+      "value": ""
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    },
+    {
+      "key": "",
+      "secret": true
+    }
+  ]
+}
